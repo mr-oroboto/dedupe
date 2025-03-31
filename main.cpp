@@ -59,10 +59,11 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-    unordered_map<string, list<entry>> duplicates;
+    unordered_map<string, list<entry>> duplicates;      // duplicate files keyed by sha256 hash
     stack<string> directoriesToScan;
     directoriesToScan.emplace(opts.rootDirectory);
 
+    // Build list of duplicated files
     while ( ! directoriesToScan.empty()) {
         string directory = directoriesToScan.top();
         directoriesToScan.pop();
@@ -80,6 +81,7 @@ int main(int argc, char** argv) {
             std::cout << std::endl << hash << " (" << entries.front().st_size << " bytes per file)" << std::endl;
         }
 
+        // Delete (if requested) any duplicates
         bool first = true;
         for (const auto& entry : entries) {
             if (opts.verbose) std::cout << "  " << entry.path << " mtime: " << entry.st_mtim.tv_sec << (entry.hardlink ? " (hardlink)" : "") << std::endl;
